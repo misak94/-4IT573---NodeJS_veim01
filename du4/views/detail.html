@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title>Document</title>
+  </head>
+  <body>
+    <a href = "http://localhost:3000">zpet</a>
+    <h1><%=todo.title%></h1>
+    <%if (todo.done){%><h2>Stav:Dokonceno</h2><%}else{%><h2>Stav:Nedokonceno</h2><%}%>
+    
+    <%if (todo.done){%>
+        <button type="button" onclick="window.location.href='http://localhost:3000/todos/<%=todo.id%>/toggle'">nedokoncit</button>
+        <button type="button" onclick="window.location.href='http://localhost:3000/todos/<%=todo.id%>/remove'">smazat</button>
+    <%}else{%>
+        <button type="button" onclick="window.location.href='http://localhost:3000/todos/<%=todo.id%>/toggle'">dokoncit</button>
+        <button type="button" onclick="window.location.href='http://localhost:3000/todos/<%=todo.id%>/remove'">smazat</button>
+    <%}%>
+    
+    <form method="post" action="/<%=todo.id%>/change_name">
+        <input name="title"/>
+        <button type="submit">zmenit jmeno</button>
+    </form>
+    
+  </body>
+</html>
