@@ -1,0 +1,57 @@
+import { todosTable } from "./schema.js"
+import { eq } from "drizzle-orm"
+
+
+
+export const getTodoById = async (db,id) => {
+  const todo = await db
+    .select()
+    .from(todosTable)
+    .where(eq(todosTable.id, id))
+    .get()
+
+  return todo
+}
+
+export const getAllTodos = async (db) => {
+  const todos = await db
+        .select().from(todosTable).all()
+  return todos
+}
+
+export const removeTodoById = async (db,id) => {
+  await db
+    
+    .delete(todosTable)
+    .where(eq(todosTable.id, id))
+    
+
+}
+
+export const updateTodoById = async (db,id,form) => {
+  await db
+        .update(todosTable)
+        .set({title: form.get("title"),
+              priority: form.get("priority")})
+        .where(eq(todosTable.id,id))      
+      
+}
+
+export const toggleTodoById = async (db,id)=>{
+    const todo = await getTodoById(db,id)
+    await db
+    .update(todosTable)
+    .set({ done: !todo.done })
+    .where(eq(todosTable.id, id))
+        
+}
+
+export const insertTodo = async (db,formData) =>{
+    await db
+        .insert(todosTable)
+        .values({
+            title: formData.get("title"),
+            done: false
+
+        })
+}
