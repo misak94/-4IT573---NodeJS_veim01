@@ -28,11 +28,11 @@ export const removeTodoById = async (db,id) => {
 
 }
 
-export const updateTodoById = async (db,id,form) => {
+export const updateTodoById = async (db,id,title,priority) => {
   await db
         .update(todosTable)
-        .set({title: form.get("title"),
-              priority: form.get("priority")})
+        .set({title: title,
+              priority: priority})
         .where(eq(todosTable.id,id))      
       
 }
@@ -46,12 +46,21 @@ export const toggleTodoById = async (db,id)=>{
         
 }
 
-export const insertTodo = async (db,formData) =>{
+export const insertTodo = async (db,title) =>{
     await db
         .insert(todosTable)
         .values({
-            title: formData.get("title"),
+            title: title,
             done: false
 
         })
+}
+
+export const findTodoByTitle = async (db,title)=>{
+  const todo = await db
+        .select()
+        .from(todosTable)
+        .where(eq(todosTable.title,title))
+        .get()
+  return todo
 }

@@ -7,7 +7,7 @@ import { todosTable } from "./schema.js"
 import { eq } from "drizzle-orm"
 import { createNodeWebSocket } from "@hono/node-ws"
 import { WSContext } from "hono/ws"
-import { getAllTodos,getTodoById,removeTodoById,updateTodoById,toggleTodoById } from "./db.js"
+import { getAllTodos,getTodoById,removeTodoById,updateTodoById,toggleTodoById,insertTodo } from "./db.js"
 
 export const db = drizzle({
   connection:
@@ -38,11 +38,7 @@ app.get("/", async (c) => {
 
 app.post("/todos", async (c) => {
   const form = await c.req.formData()
-
-  await db.insert(todosTable).values({
-    title: form.get("title"),
-    done: false,
-  })
+  await insertTodo(db,form.get("title"))
 
   sendTodosToAllConnections()
 
@@ -71,7 +67,7 @@ app.post("/todos/:id", async (c) => {
   if (!todo) return c.notFound()
 
   const form = await c.req.formData()
-  updateTodoById(db,id,form)
+  updateTodoById(db,id,form.get("title"),form.get("priority"))
   sendTodosToAllConnections()
   sendTodoDetailToAllConnections(id)
   return c.redirect(c.req.header("Referer"))
